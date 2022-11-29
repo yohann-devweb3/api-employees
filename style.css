@@ -1,0 +1,11 @@
+#modal-card-head{
+    margin: 0;
+    
+}
+.modal-card-title{
+        color: white; 
+        flex-grow: 1;
+        flex-shrink: 0;
+        font-size: 1.5rem;
+        line-height: 1;
+}
