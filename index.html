@@ -10,19 +10,16 @@
   <link rel="stylesheet" href="style.css">
   </head>
 <body>
+  <input id="lname" type="hidden"/>
+  <input id="fname" type="hidden"/>
+  <input id="userJob" type="hidden"/>
+  <input id="userMail" type="hidden"/>
   <main>
-    <button id="btnRefreshAllEmp" class="button is-info">Refresh list</button>
+    <button id="btnRefreshAllEmp" class=" fa-solid button is-info">Refresh list<i class="fa-duotone fa-arrows-rotate"></i></button>
+    <button id="btnAskAddEmp" class="button is-primary"><i class="fa-solid fa-user-plus "> Add an employee</i></button>
     <table id="tableData" class="table">
-      <thead>
-          <tr>
-              <th>#</th>
-              <th>Firstname</th>
-              <th>Lastname</th>
-              <th>Action</th>
-
-          </tr>
-      </thead>
-  </table>
+    
+    </table>
   </main>
 
 <!---------------------modal--------------------->

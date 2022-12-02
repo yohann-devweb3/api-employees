@@ -1,27 +1,29 @@
 /*----------variables------*/
 let urlApi = 'https://6057e432c3f49200173ad08d.mockapi.io/api/v1/employees/';
 let hiddenValue;
-let fname;
-let lname;
-let userJob;
-let userMail;
+
 
 
 /*when page is ready and than all contents are loaded*/
 $(document).ready(function () {
 
     getData();
-
     
-
+    //display the form of employee's Profile 
     $(".btnProfileUser").click(function (event) {
-     
-    event.preventDefault();
-    info("notification is-info has-text-centered", "Profile", "", "Unlock (for updating)");
 
-       generateForm(true);
+        event.preventDefault();
+        info("notification is-info has-text-centered", "Profile", "", "Unlock (for updating)");
+        generateForm(true);
     });
 
+    //display the form's Profile 
+    $("#btnAskAddEmp").click(function (event) {
+
+        event.preventDefault();
+        info("notification is-info has-text-centered", "Add an employee", "", "Add");
+        generateForm(false);
+    });
 
 
     //modal : waiting for deleting an employee or not
@@ -30,10 +32,18 @@ $(document).ready(function () {
         info("notification is-danger", "Warning", "Are you sure you want to delete this user?", "Yes (delete)");
     });
 
-    //close the modal
+    //close the modal by little button close on top side
     $("#btnCancelModal").click(function (event) {
         event.preventDefault();
         $("#image-modal").hide();
+
+    });
+
+    //close the modal by little button close on top side
+    $(".delete").click(function (event) {
+        event.preventDefault();
+        $("#image-modal").hide();
+
     });
 
     //according the text of btnConfirmModal , execute a choice...
@@ -47,29 +57,28 @@ $(document).ready(function () {
         }
 
         if (btnTextConfirmModal == "Unlock (for updating)") {
-             $('#fieldSetProfile').prop("disabled", false);
-             $('#btnConfirmModal').text("Save changes");
-      
+            $('#fieldSetProfile').prop("disabled", false);
+            $('#btnConfirmModal').text("Save changes");
+
         }
 
         if (btnTextConfirmModal == "Save changes") {
             event.preventDefault();
-      
-        
-           info("notification is-danger", "Warning", "Are you sure you want to update this user?", "Yes (update)")
-           $('#fieldSetProfile').prop("disabled", false);
-           generateForm(false);
-         $('#sai_firstname').val(fname);
-            $('#sai_lastname').val(lname);
-            $('#sai_job').val(userJob);
-            $('#sai_email').val(userMail);
-         
+
+            fname = $('#sai_firstname').val();
+            lname = $('#sai_lastname').val();
+            empMail = $('#sai_email').val();
+            empJob = $('#sai_job').val();
+            info("notification is-danger", "Warning", "Are you sure you want to update this user?", "Yes (update)")
+
+
         }
 
         if (btnTextConfirmModal == "Yes (update)") {
             $('#fieldSetProfile').prop("disabled", false);
-   
-             updateEmp(hiddenValue);
+
+
+            updateEmp(hiddenValue, fname, lname, empMail, empJob);
         }
     });
 
@@ -86,23 +95,28 @@ $(document).ready(function () {
 
 //refresh the list of employees
 $("#btnRefreshAllEmp").click(function (event) {
-   
+
     getData();
 });
 
 /*----------functions----------*/
-function generateForm(paramBool){
-   let myForm = '';
-    myForm = `
-    <form class="field">
+function generateForm(paramBool) {
+    let myForm = '';
 
-    <fieldset disabled id="fieldSetProfile">
+    if (paramBool === true) {
+        myForm = myForm + `<form class="field"><fieldset disabled id="fieldSetProfile">`;
+    } else {
+        myForm = myForm + `<form class="field"><fieldset  id="fieldSetProfile">`;
+    }
 
-        <div class="field">
-        <label class="label">Firstname</label>
-            <div class="control">
-            <input id="sai_firstname" class="input" type="text" value="">
-            </div>
+
+
+    myForm = myForm +
+        `   <div class="field">
+            <label class="label">Firstname</label>
+                <div class="control">
+                <input id="sai_firstname" class="input" type="text" value="">
+                </div>
         </div>
 
         <div class="field">
@@ -128,20 +142,18 @@ function generateForm(paramBool){
     </fieldset>
     </form>
     `;
-   
-        $("#modal-card-body").append(myForm);
-        getDataEmp(hiddenValue,paramBool);
-    
-   
-   
-       
-    
-   
+
+    $("#modal-card-body").append(myForm);
+
+
+    getDataEmp(hiddenValue, paramBool);
+
+
 
 }
 
-function getDataEmp(idEmployee,boolOk){
-    
+function getDataEmp(idEmployee, boolOk) {
+
     myUrl = urlApi + idEmployee.toString();
 
     $.ajax({
@@ -151,24 +163,14 @@ function getDataEmp(idEmployee,boolOk){
         async: false,
 
         success: function (response) {
-            if (boolOk===true){
+            if (boolOk === true) {
                 $('#sai_firstname').val(response.name);
                 $('#sai_lastname').val(response.last_name);
                 $('#sai_job').val(response.job_title);
                 $('#sai_email').val(response.email);
-          
-        
-            }else{
-                $('#sai_firstname').val(this.val());
-                $('#sai_lastname').val(this.val());
-                $('#sai_job').val(this.val());
-                $('#sai_email').val(this.val());
+
             }
-     
 
-
-
-          
         }
 
 
@@ -200,39 +202,34 @@ function deleteEmp(myId) {
             console.log("ERROR:" + error);
         }
     });
-  
+
 }
 
-function updateEmp(myId){
+function updateEmp(myId, fname, lname, emailEmp, jobEmp) {
     myUrl = urlApi + myId.toString();
-
-
-
 
     $.ajax({
         type: "PUT",
         url: myUrl,
         data: {
             "id": myId,
-            "name": $('#sai_firstname').val(),
-            "last_name": $('#sai_lastname').val(),
-            "job_title": $('#sai_job').val(),
-            "email": $('#sai_email').val()
-            
+            "name": fname,
+            "last_name": lname,
+            "job_title": jobEmp,
+            "email": emailEmp
 
-    
         },
         async: false,
         success: function ($mockData) {
-              $('.modal').hide();
+            $('.modal').hide();
             getData();
-          
+
         },
         error: function (request, error) {
             console.log("ERROR:" + error);
         }
     });
-   
+
 }
 
 /*------------------------------------
@@ -263,8 +260,19 @@ function getData() {
 
         success: function (response) {
             $('#tableData').empty();// empty table before load it
+            let tHead=
+            `<thead>
+                <tr>
+                    <th>#</th>
+                    <th>Firstname</th>
+                    <th>Lastname</th>
+                    <th>Action</th>
+                </tr>
+            </thead>`
+
+            $('#tableData').append(tHead);
             $.each(response, function (key, value) {
-               
+
                 $('#tableData').append("<tbody><tr>\
                             <td>"+ value.id + "</td>\
                             <td>"+ value.name + "</td>\
