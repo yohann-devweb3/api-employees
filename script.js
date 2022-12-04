@@ -1,4 +1,4 @@
-/*----------variables------*/
+/*----------variables---------*/
 let urlApi = 'https://6057e432c3f49200173ad08d.mockapi.io/api/v1/employees/';
 let hiddenValue;
 
@@ -8,13 +8,13 @@ let hiddenValue;
 $(document).ready(function () {
 
     getData();
-    
+
     //display the form of employee's Profile 
     $(".btnProfileUser").click(function (event) {
-
         event.preventDefault();
         info("notification is-info has-text-centered", "Profile", "", "Unlock (for updating)");
         generateForm(true);
+
     });
 
     //display the form's Profile 
@@ -32,19 +32,14 @@ $(document).ready(function () {
         info("notification is-danger", "Warning", "Are you sure you want to delete this user?", "Yes (delete)");
     });
 
-    //close the modal by little button close on top side
+    //close the modal by clicking on button "cancel"
     $("#btnCancelModal").click(function (event) {
         event.preventDefault();
         $("#image-modal").hide();
 
     });
 
-    //close the modal by little button close on top side
-    $(".delete").click(function (event) {
-        event.preventDefault();
-        $("#image-modal").hide();
 
-    });
 
     //according the text of btnConfirmModal , execute a choice...
     $("#btnConfirmModal").click(function (event) {
@@ -64,21 +59,32 @@ $(document).ready(function () {
 
         if (btnTextConfirmModal == "Save changes") {
             event.preventDefault();
-
             fname = $('#sai_firstname').val();
             lname = $('#sai_lastname').val();
             empMail = $('#sai_email').val();
             empJob = $('#sai_job').val();
             info("notification is-danger", "Warning", "Are you sure you want to update this user?", "Yes (update)")
-
-
         }
 
+        //update the employee according params we give it into the form
         if (btnTextConfirmModal == "Yes (update)") {
             $('#fieldSetProfile').prop("disabled", false);
-
-
             updateEmp(hiddenValue, fname, lname, empMail, empJob);
+        }
+
+        //ask by a modal the need to add an employee
+        if (btnTextConfirmModal == "Add") {
+            event.preventDefault();
+            fname = $('#sai_firstname').val();
+            lname = $('#sai_lastname').val();
+            empMail = $('#sai_email').val();
+            empJob = $('#sai_job').val();
+            info("notification is-warning", "Warning", "Are you sure you want to add this user?", "Yes (add)")
+        }
+        //add the employee according params we give it into the form
+        if (btnTextConfirmModal == "Yes (add)") {
+            $('#fieldSetProfile').prop("disabled", false);
+            addEmp( fname, lname, empMail, empJob);
         }
     });
 
@@ -88,19 +94,28 @@ $(document).ready(function () {
     });
 
 
-
+    //close the modal by little button close on top side
+    $("#btnCloseTopModal").click(function (event) {
+        $(".modal").hide();
+    });
 
 });
 
 
 //refresh the list of employees
 $("#btnRefreshAllEmp").click(function (event) {
-
+    event.preventDefault();
+    window.location.reload();
     getData();
+   
+
+ 
+    
 });
 
 /*----------functions----------*/
 function generateForm(paramBool) {
+    
     let myForm = '';
 
     if (paramBool === true) {
@@ -211,6 +226,8 @@ function updateEmp(myId, fname, lname, emailEmp, jobEmp) {
     $.ajax({
         type: "PUT",
         url: myUrl,
+        cache: false,
+        async: false,
         data: {
             "id": myId,
             "name": fname,
@@ -222,7 +239,37 @@ function updateEmp(myId, fname, lname, emailEmp, jobEmp) {
         async: false,
         success: function ($mockData) {
             $('.modal').hide();
+            window.location.reload();
             getData();
+
+        },
+        error: function (request, error) {
+            console.log("ERROR:" + error);
+        }
+    });
+
+}
+
+function addEmp( fname, lname, emailEmp, jobEmp) {
+    myUrl = urlApi ;
+
+    $.ajax({
+        type: "POST",
+        url: myUrl,
+        data: {
+ 
+            "name": fname,
+            "last_name": lname,
+            "job_title": jobEmp,
+            "email": emailEmp
+
+        },
+        async: false,
+        success: function ($mockData) {
+            $('.modal').hide();
+            window.location.reload();
+            getData();
+           
 
         },
         error: function (request, error) {
@@ -260,8 +307,8 @@ function getData() {
 
         success: function (response) {
             $('#tableData').empty();// empty table before load it
-            let tHead=
-            `<thead>
+            let tHead =
+                `<thead>
                 <tr>
                     <th>#</th>
                     <th>Firstname</th>

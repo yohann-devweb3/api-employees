@@ -14,7 +14,10 @@
   <input id="fname" type="hidden"/>
   <input id="userJob" type="hidden"/>
   <input id="userMail" type="hidden"/>
-  <main>
+  <main class="container">
+    <div id="messageAlert" class="notification is-primary" >
+      
+    </div>
     <button id="btnRefreshAllEmp" class=" fa-solid button is-info">Refresh list<i class="fa-duotone fa-arrows-rotate"></i></button>
     <button id="btnAskAddEmp" class="button is-primary"><i class="fa-solid fa-user-plus "> Add an employee</i></button>
     <table id="tableData" class="table">
@@ -28,7 +31,7 @@
   <div class="modal-card">
     <header id="modal-card-head" class="modal-card-head">
       <p id="modal-card-title" class="modal-card-title">Modal title</p>
-      <button class="delete" aria-label="close"></button>
+      <button id="btnCloseTopModal" class="delete" aria-label="close"></button>
     </header>
     <section id="modal-card-body" class="modal-card-body">
       <!-- Content ... -->
