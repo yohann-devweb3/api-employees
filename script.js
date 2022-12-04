@@ -5,14 +5,18 @@ let hiddenValue;
 
 
 /*when page is ready and than all contents are loaded*/
-$(document).ready(function () {
+$(document).ready(function (event) {
 
     getData();
 
     //display the form of employee's Profile 
     $(".btnProfileUser").click(function (event) {
+  
+     
+        hiddenValue=$(event.currentTarget).data('id');
         event.preventDefault();
-        info("notification is-info has-text-centered", "Profile", "", "Unlock (for updating)");
+      
+        info("notification is-info has-text-centered", "Profile", "", "Unlock (for updating)");  
         generateForm(true);
 
     });
@@ -28,6 +32,7 @@ $(document).ready(function () {
 
     //modal : waiting for deleting an employee or not
     $(".btnDeleteEmp").click(function (event) {
+        hiddenValue=$(event.currentTarget).data('id');
         event.preventDefault();
         info("notification is-danger", "Warning", "Are you sure you want to delete this user?", "Yes (delete)");
     });
@@ -47,8 +52,10 @@ $(document).ready(function () {
         let btnTextConfirmModal = event.target.innerText;
 
         if (btnTextConfirmModal == "Yes (delete)") {
+       
             deleteEmp(hiddenValue);
             $(".modal").hide();
+            message("Employee deleted ! ","notification  is-success  is-verticaled ");
         }
 
         if (btnTextConfirmModal == "Unlock (for updating)") {
@@ -70,6 +77,7 @@ $(document).ready(function () {
         if (btnTextConfirmModal == "Yes (update)") {
             $('#fieldSetProfile').prop("disabled", false);
             updateEmp(hiddenValue, fname, lname, empMail, empJob);
+            message("Informations updated ! ","notification  is-success  is-verticaled");
         }
 
         //ask by a modal the need to add an employee
@@ -79,12 +87,13 @@ $(document).ready(function () {
             lname = $('#sai_lastname').val();
             empMail = $('#sai_email').val();
             empJob = $('#sai_job').val();
-            info("notification is-warning", "Warning", "Are you sure you want to add this user?", "Yes (add)")
+            info("notification is-danger", "Warning", "Are you sure you want to add this user?", "Yes (add)")
         }
         //add the employee according params we give it into the form
         if (btnTextConfirmModal == "Yes (add)") {
             $('#fieldSetProfile').prop("disabled", false);
-            addEmp( fname, lname, empMail, empJob);
+            addEmp(fname, lname, empMail, empJob);
+            message("Employee added ! ","notification  is-success  is-verticaled");
         }
     });
 
@@ -104,30 +113,45 @@ $(document).ready(function () {
 
 //refresh the list of employees
 $("#btnRefreshAllEmp").click(function (event) {
-    event.preventDefault();
-    window.location.reload();
-    getData();
+     event.preventDefault();
    
+    getData();
+    message("Refreshing... ","notification  is-success ");
 
- 
-    
 });
 
 /*----------functions----------*/
+function message(message, classMessage) {
+
+    $('#messageAlert').removeClass();
+    $('#messageAlert').addClass(classMessage + ' columns is-vcentered ');
+    $('#messageAlert').css('visibility','visible');
+    $('#messageAlert').text(message);
+    setTimeout(() => {
+
+      
+        $('#messageAlert').css('visibility','hidden');
+    // window.location.reload();
+    }, 1350);
+ 
+}
+
+
 function generateForm(paramBool) {
-    
+
     let myForm = '';
 
     if (paramBool === true) {
-        myForm = myForm + `<form class="field"><fieldset disabled id="fieldSetProfile">`;
+        myForm = myForm + `<div class="field"><fieldset disabled id="fieldSetProfile">`;
     } else {
-        myForm = myForm + `<form class="field"><fieldset  id="fieldSetProfile">`;
+        myForm = myForm + `<div class="field"><fieldset  id="fieldSetProfile">`;
+       hiddenValue="";
     }
 
 
 
     myForm = myForm +
-        `   <div class="field">
+        `   <div class="field ">
             <label class="label">Firstname</label>
                 <div class="control">
                 <input id="sai_firstname" class="input" type="text" value="">
@@ -155,7 +179,7 @@ function generateForm(paramBool) {
             </div>
         </div>
     </fieldset>
-    </form>
+    </div>
     `;
 
     $("#modal-card-body").append(myForm);
@@ -199,6 +223,7 @@ function info(classAlert, textTitreModal, textMessage, textButtonConfirm) {
     $("#modal-card-body").text(textMessage);
     $('#btnConfirmModal').text(textButtonConfirm);
 
+    $('.modal').addClass('modal columns is-vcentered');
     $(".modal").show();
 }
 
@@ -239,7 +264,7 @@ function updateEmp(myId, fname, lname, emailEmp, jobEmp) {
         async: false,
         success: function ($mockData) {
             $('.modal').hide();
-            window.location.reload();
+          //  window.location.reload();
             getData();
 
         },
@@ -250,14 +275,14 @@ function updateEmp(myId, fname, lname, emailEmp, jobEmp) {
 
 }
 
-function addEmp( fname, lname, emailEmp, jobEmp) {
-    myUrl = urlApi ;
+function addEmp(fname, lname, emailEmp, jobEmp) {
+    myUrl = urlApi;
 
     $.ajax({
         type: "POST",
         url: myUrl,
         data: {
- 
+
             "name": fname,
             "last_name": lname,
             "job_title": jobEmp,
@@ -267,10 +292,9 @@ function addEmp( fname, lname, emailEmp, jobEmp) {
         async: false,
         success: function ($mockData) {
             $('.modal').hide();
-            window.location.reload();
+           // window.location.reload();
             getData();
-           
-
+          
         },
         error: function (request, error) {
             console.log("ERROR:" + error);
@@ -279,16 +303,7 @@ function addEmp( fname, lname, emailEmp, jobEmp) {
 
 }
 
-/*------------------------------------
-function name : setHiddenId()
-description : set the hidden id value to manipulate id from users
-parameters : none
-returns :  none
---------------------------------------*/
-function setHiddenId(myId) {
-    hiddenValue = '';
-    hiddenValue = myId;
-}
+
 
 
 /*------------------------------------
@@ -299,6 +314,7 @@ returns :  data object into the table "tableData"
 --------------------------------------*/
 
 function getData() {
+ 
     $.ajax({
         url: urlApi,
         type: "GET",
@@ -324,9 +340,9 @@ function getData() {
                             <td>"+ value.id + "</td>\
                             <td>"+ value.name + "</td>\
                             <td>"+ value.last_name + "</td>" +
-                    `<td><a href="" onclick='setHiddenId(` + value.id + `)' class="btnProfileUser mr-5"><i class="fa-solid fa-circle-info"></a></i>` +
-                    `<a href="" onclick='setHiddenId(` + value.id + `)' class="btnDeleteEmp"><i class="fa-solid fa-user-xmark"></a></i>` + "</td>" +
-                    "</tr></tbody");
+                    `<td><a href=''  data-id='`+ value.id +`'  class="btnProfileUser mr-5"><i class="fa-solid fa-circle-info"></i></a>` +
+                    `<a href=''  data-id='`+ value.id +`'   class="btnDeleteEmp"><i class="fa-solid fa-user-xmark"></i></a>` + "</td>" +
+                    "</tr></tbody")
 
             })
 
@@ -335,5 +351,5 @@ function getData() {
 
 
     });
-
+  
 }

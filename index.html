@@ -9,31 +9,43 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   </head>
-<body>
-  <input id="lname" type="hidden"/>
-  <input id="fname" type="hidden"/>
-  <input id="userJob" type="hidden"/>
-  <input id="userMail" type="hidden"/>
-  <main class="container">
-    <div id="messageAlert" class="notification is-primary" >
-      
-    </div>
-    <button id="btnRefreshAllEmp" class=" fa-solid button is-info">Refresh list<i class="fa-duotone fa-arrows-rotate"></i></button>
-    <button id="btnAskAddEmp" class="button is-primary"><i class="fa-solid fa-user-plus "> Add an employee</i></button>
-    <table id="tableData" class="table">
+<body >
+  <div class="block">
+    <input id="lname" type="hidden"/>
+    <input id="fname" type="hidden"/>
+    <input id="userJob" type="hidden"/>
+    <input id="userMail" type="hidden"/>
+  </div>
+
+ 
+    <main class=" container block is-flex is-flex-direction-column is-flex-wrap-nowrap ">
+  
+      <div  
+        id="messageAlert" class="notification" >
+      </div>
+      <nav class="">
+        <button id="btnRefreshAllEmp" type="button" class="is-small fa-solid button is-info " >Refresh list<i class="fa-duotone fa-arrows-rotate"></i></button>
+        <button id="btnAskAddEmp" type="button" class="is-small button is-primary"><i class="fa-solid fa-user-plus "> Add an employee</i></button>
+      </nav>
     
-    </table>
+      <table id="tableData" class="table is-bordered">
+      
+      </table>
+ 
+
   </main>
+ 
+
 
 <!---------------------modal--------------------->
-<div class="modal">
+<div class="modal block container is-mobile">
   <div class="modal-background"></div>
   <div class="modal-card">
     <header id="modal-card-head" class="modal-card-head">
       <p id="modal-card-title" class="modal-card-title">Modal title</p>
       <button id="btnCloseTopModal" class="delete" aria-label="close"></button>
     </header>
-    <section id="modal-card-body" class="modal-card-body">
+    <section id="modal-card-body" class="modal-card-body ">
       <!-- Content ... -->
       
     </section>
