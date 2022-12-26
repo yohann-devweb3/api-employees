@@ -1,20 +1,22 @@
-#modal-card-head{
-    margin: 0; 
+#modal-card-head {
+    margin: 0;
 }
 
-.modal-card-title{
-        color: white; 
-        flex-grow: 1;
-        flex-shrink: 0;
-        font-size: 1.5rem;
-        line-height: 1;
+.modal-card-title {
+    color: white;
+    flex-grow: 1;
+    flex-shrink: 0;
+    font-size: 1.5rem;
+    line-height: 1;
 }
 
-#messageAlert{
+#messageAlert {
     visibility: hidden;
     position: fixed;
     top: 45%;
-    left : 45%;
+    left: 45%;
 }
 
-
+.container {
+    max-width: 100% !important;
+}
