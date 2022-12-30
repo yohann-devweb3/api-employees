@@ -168,7 +168,6 @@ function getDataEmp(idEmployee, boolOk) {
         type: "GET",
         cache: false,
         async: false,
-        data:response,
 
         success: function (response) {
             if (boolOk === true) {
