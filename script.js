@@ -168,6 +168,7 @@ function getDataEmp(idEmployee, boolOk) {
         type: "GET",
         cache: false,
         async: false,
+        data:response,
 
         success: function (response) {
             if (boolOk === true) {
@@ -176,6 +177,9 @@ function getDataEmp(idEmployee, boolOk) {
                 $('#sai_job').val(response.job_title);
                 $('#sai_email').val(response.email);
             }
+        },
+        error: function(response, statusText) {
+             alert("Error: "+statusText);
         }
     });
 }
@@ -287,6 +291,9 @@ function getData() {
                     `<a href=''  data-id='` + value.id + `'   class="btnDeleteEmp"><i class="fa-solid fa-user-xmark"></i></a>` + "</td>" +
                     "</tr></tbody")
             })
-        }
+        },
+        error: function(xhr, statusText) { alert("Error: "+statusText); }
+
+ 
     });
 }
